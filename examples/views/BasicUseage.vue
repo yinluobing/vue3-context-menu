@@ -463,6 +463,7 @@ function onContextMenu3(e : MouseEvent, direction: string) {
   //prevent the browser's default menu
   e.preventDefault();
   e.stopPropagation();
+  console.log(123)
   //show our menu
   ContextMenu.showContextMenu({
     items: [
@@ -471,6 +472,7 @@ function onContextMenu3(e : MouseEvent, direction: string) {
       },
       { 
         label: 'Simple item',
+        iconArrow:'abcd',
         children: [
           { label: "Item1" },
           { label: "Item2" },

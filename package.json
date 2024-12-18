@@ -1,16 +1,18 @@
 {
-  "name": "@imengyu/vue3-context-menu",
-  "version": "1.4.2",
+  "name": "vue3-context-menu-icker",
+  "version": "1.4.3",
   "description": "A context menu component for Vue3",
-  "main": "lib/vue3-context-menu.umd.js",
+  "main": "lib/vue3-context-menu.es.js",
   "files": [
     "lib",
     "index.d.ts"
   ],
   "scripts": {
     "dev": "vite serve examples",
+    "build": "npm run build-lib && npm run build-types",
+    "prepublishOnly": "npm run build",
     "build-demo": "vite build examples",
-    "build-lib": "vite build library",
+    "build-lib": "vite build library --emptyOutDir",
     "build-types": "vue-tsc -p ./library/tsconfig.json --outDir ./lib --declaration --emitDeclarationOnly",
     "docs:dev": "cd docs && vitepress dev",
     "docs:build": "vitepress build ./docs"
@@ -24,7 +26,7 @@
     "markdown-it-container": "^4.0.0",
     "npm-run-all2": "^6.0.6",
     "rimraf": "^5.0.5",
-    "sass": "^1.69.5",
+    "sass": "^1.32.13",
     "typescript": "~5.2.0",
     "vite": "^4.4.9",
     "vite-plugin-dts": "^3.6.4",
@@ -36,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/imengyu/vue3-context-menu.git"
+    "url": "git+https://github.com/yinluobing/vue3-context-menu-icker.git"
   },
   "keywords": [
     "vue3",
@@ -47,10 +49,10 @@
     "菜单",
     "contextmenu"
   ],
-  "author": "imengyu",
+  "author": "yinluobing",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/imengyu/vue3-context-menu/issues"
+    "url": "https://github.com/yinluobing/vue3-context-menu-icker/issues"
   },
-  "homepage": "https://github.com/imengyu/vue3-context-menu#readme"
+  "homepage": "https://github.com/yinluobing/vue3-context-menu-icker#readme"
 }

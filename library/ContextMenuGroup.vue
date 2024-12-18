@@ -43,6 +43,10 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    iconArrow: {
+      type: String,
+      default: ''
+    },
     /**
      * Custom icon library font class name.
      * 

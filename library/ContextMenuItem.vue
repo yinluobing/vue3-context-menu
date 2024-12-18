@@ -4,31 +4,28 @@
     <VNodeRender v-if="globalHasSlot('itemRender')" :vnode="() => globalRenderSlot('itemRender', getItemDataForChildren())" />
     <VNodeRender v-else-if="customRender" :vnode="customRender" :data="getItemDataForChildren()" />
     <!--Default item-->
-    <div 
-      v-else
-      :class="[
-        'mx-context-menu-item',
-        (disabled ? 'disabled' : ''),
-        (keyBoardFocusMenu ? 'keyboard-focus' : ''),
-        (customClass ? (' ' + customClass) : ''),
-        (showSubMenu ? 'open' : ''),
-      ]"
-      @click="onClick"
-      @mouseenter="onMouseEnter"
-    >
+    <div v-else :class="[
+    'mx-context-menu-item',
+    (disabled ? 'disabled' : ''),
+    (keyBoardFocusMenu ? 'keyboard-focus' : ''),
+    (customClass ? (' ' + customClass) : ''),
+    (showSubMenu ? 'open' : ''),
+  ]" @click="onClick" @mouseenter="onMouseEnter">
       <slot>
         <div class="mx-item-row">
           <div :class="[
-            'mx-icon-placeholder',
-            preserveIconWidth ? 'preserve-width': '',
-          ]">
+    'mx-icon-placeholder',
+    preserveIconWidth ? 'preserve-width' : '',
+  ]">
             <slot name="icon">
               <VNodeRender v-if="globalHasSlot('itemIconRender')" :vnode="() => globalRenderSlot('itemIconRender', getItemDataForChildren())" />
-              <svg v-else-if="typeof svgIcon === 'string' && svgIcon" class="icon svg" v-bind="svgProps">
-                <use :xlink:href="svgIcon"></use>
-              </svg>
+              <i v-else-if="typeof svgIcon === 'string' && svgIcon" class="icon" :class="svgIcon" v-bind="svgProps">
+                <svg>
+                  <use :xlink:href="'#' + svgIcon"></use>
+                </svg>
+              </i>
               <VNodeRender v-else-if="(typeof icon !== 'string')" :vnode="icon" :data="icon" />
-              <i v-else-if="typeof icon === 'string' && icon !== ''" :class="icon + ' icon '+ iconFontClass + ' ' + options.iconFontClass"></i>
+              <i v-else-if="typeof icon === 'string' && icon !== ''" :class="icon + ' icon ' + iconFontClass + ' ' + options.iconFontClass"></i>
             </slot>
             <slot v-if="checked" name="check">
               <VNodeRender v-if="globalHasSlot('itemCheckRender')" :vnode="() => globalRenderSlot('itemCheckRender', getItemDataForChildren())" />
@@ -48,12 +45,17 @@
           </slot>
           <slot v-if="showRightArrow" name="rightArrow">
             <VNodeRender v-if="globalHasSlot('itemRightArrowRender')" :vnode="() => globalRenderSlot('itemRightArrowRender', getItemDataForChildren())" />
-            <ContextMenuIconRight />
+            <i v-else-if="typeof iconArrow === 'string' && iconArrow" class="icon" :class="iconArrow">
+              <svg>
+                <use :xlink:href="'#' + iconArrow"></use>
+              </svg>
+            </i>
+            <ContextMenuIconRight v-else />
           </slot>
         </div>
       </slot>
     </div>
-    
+
     <!--Sub menu render-->
     <Transition v-if="options.menuTransitionProps" v-bind="options.menuTransitionProps">
       <slot v-if="showSubMenu" name="submenu"></slot>
@@ -63,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, nextTick, onBeforeUnmount, onMounted, type PropType, ref, type SVGAttributes, toRefs, type TransitionProps, type Ref, computed, provide } from 'vue'
+import { inject, nextTick, onBeforeUnmount, onMounted, type PropType, ref, type SVGAttributes, toRefs, type Ref, provide } from 'vue'
 import type { SubMenuParentContext } from './ContextSubMenu.vue'
 import type { GlobalHasSlot, GlobalRenderSlot } from './ContextMenu.vue'
 import type { MenuItem, MenuItemContext, MenuOptions } from './ContextMenuDefine'
@@ -102,7 +104,7 @@ const props = defineProps({
     default: ''
   },
   clickHandler: {
-    type: Function as PropType<(e: MouseEvent|KeyboardEvent) => void>,
+    type: Function as PropType<(e: MouseEvent | KeyboardEvent) => void>,
     default: null
   },
   /**
@@ -116,6 +118,10 @@ const props = defineProps({
    * Menu icon (for icon class)
    */
   icon: {
+    type: [String, Object, Function],
+    default: ''
+  },
+  iconArrow: {
     type: [String, Object, Function],
     default: ''
   },
@@ -207,26 +213,26 @@ const emit = defineEmits([
   'subMenuClose',
 ])
 
-const { 
+const {
   clickHandler, clickClose, clickableWhenHasChildren, disabled, hidden,
-  label, icon, iconFontClass,
+  label, icon, iconArrow, iconFontClass,
   showRightArrow, shortcut,
   hasChildren,
 } = toRefs(props);
 const showSubMenu = ref(false);
 const keyBoardFocusMenu = ref(false);
-
+console.log(11111111, label.value, iconArrow.value)
 const menuItemRef = ref<HTMLElement>();
 
 const options = inject('globalOptions') as Ref<MenuOptions>;
 const globalHasSlot = inject('globalHasSlot') as GlobalHasSlot;
 const globalRenderSlot = inject('globalRenderSlot') as GlobalRenderSlot;
-const globalCloseMenu = inject('globalCloseMenu') as (fromItem: MenuItem|undefined) => void;
+const globalCloseMenu = inject('globalCloseMenu') as (fromItem: MenuItem | undefined) => void;
 
 const menuContext = inject('menuContext') as SubMenuParentContext;
 
 //Instance Contet for keyboadr control
-const menuItemInstance : MenuItemContext = {
+const menuItemInstance: MenuItemContext = {
   getSubMenuInstance: () => undefined,
   showSubMenu: () => {
     if (showSubMenu.value) {
@@ -287,7 +293,7 @@ onBeforeUnmount(() => {
 });
 
 //Click handler
-function onClick(e: MouseEvent|KeyboardEvent) {
+function onClick(e: MouseEvent | KeyboardEvent) {
   //Ignore clicking when disabled
   if (disabled.value)
     return;
@@ -315,7 +321,7 @@ function onClick(e: MouseEvent|KeyboardEvent) {
       onMouseEnter();
   } else {
     //Call hander from options
-    if (typeof clickHandler.value === 'function') 
+    if (typeof clickHandler.value === 'function')
       clickHandler.value(e);
     emit('click', e);
     if (clickClose.value) {
@@ -348,8 +354,7 @@ function onMouseEnter(e?: MouseEvent) {
     }
   }
 }
-function closeSubMenu() 
-{
+function closeSubMenu() {
   keyBoardFocusMenu.value = false;
   showSubMenu.value = false;
   emit('subMenuClose', menuItemInstance);
@@ -377,5 +382,4 @@ function getItemDataForChildren() {
 defineExpose(menuItemInstance);
 </script>
 
-<style>
-</style>
+<style></style>

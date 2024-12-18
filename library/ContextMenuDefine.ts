@@ -385,6 +385,7 @@ export interface MenuItem {
    * The icon for this menu item.
    */
   icon ?: string|VNode|((icon: string) => VNode),
+  iconArrow ?: string|VNode|((icon: string) => VNode),
   /**
    * Custom icon library font class name.
    *

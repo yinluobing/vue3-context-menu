@@ -11,7 +11,9 @@
       minWidth: minWidth ? solveNumberOrStringSize(minWidth) : `${constOptions.defaultMinWidth}px`,
       maxHeight: overflow && maxHeight > 0 ? `${maxHeight}px` : undefined,
       zIndex: zIndex,
+      // left: `${position.x+10}px`,
       left: `${position.x}px`,
+      // top: `0px`,
       top: `${position.y}px`,
     }"
     data-type="ContextSubMenu"
@@ -39,6 +41,7 @@
             :hidden="item.hidden"
             :icon="item.icon"
             :iconFontClass="item.iconFontClass"
+            :iconArrow="item.iconArrow"
             :svgIcon="item.svgIcon"
             :svgProps="item.svgProps"
             :label="item.label"
@@ -219,7 +222,7 @@ export default defineComponent({
     const options = inject('globalOptions') as Ref<MenuOptions>;
     const globalHasSlot = inject('globalHasSlot') as GlobalHasSlot;
     const globalRenderSlot = inject('globalRenderSlot') as GlobalRenderSlot;
-
+      // props.po
     //#endregion
 
     const { zIndex, getParentWidth, getParentHeight, getZoom } = parentContext;
